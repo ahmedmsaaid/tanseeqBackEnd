@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Faculty, IMinimumDegree } from '../models/faculty.model';
+import { Faculty } from '../models/faculty.model';
 import mongoose from 'mongoose';
 import { facultiesData } from '../data/faculties_data';
 
@@ -40,10 +40,91 @@ function calculateProbability(userPercent: number, weightedCutoff: number): { pe
   }
 }
 
-// 3. Predict Acceptance with Weighted Trend (60% 2025 + 40% 2024)
+// 1. Get all faculties
+export const getFaculties = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { search, city, category, educationType, section, limit = 10, page = 1 } = req.query;
+
+    if (mongoose.connection.readyState !== 1) {
+      let list = [...facultiesData];
+      if (search) {
+        const s = (search as string).toLowerCase();
+        list = list.filter(f =>
+          f.faculty.toLowerCase().includes(s) ||
+          f.university.toLowerCase().includes(s) ||
+          f.city.toLowerCase().includes(s) ||
+          f.description.toLowerCase().includes(s)
+        );
+      }
+      if (city) list = list.filter(f => f.city === city);
+      if (category) list = list.filter(f => f.category === category);
+      if (educationType) list = list.filter(f => f.educationType === educationType);
+      if (section) list = list.filter(f => f.availableSections.includes(section as any));
+
+      const pageNum = parseInt(page as string);
+      const limitNum = parseInt(limit as string);
+      const total = list.length;
+      const paginated = list.slice((pageNum - 1) * limitNum, pageNum * limitNum);
+
+      res.json({
+        success: true,
+        data: paginated,
+        pagination: { total, page: pageNum, limit: limitNum, pages: Math.ceil(total / limitNum) }
+      });
+      return;
+    }
+
+    const query: any = {};
+    if (search) query.$text = { $search: search as string };
+    if (city) query.city = city;
+    if (category) query.category = category;
+    if (educationType) query.educationType = educationType;
+    if (section) query.availableSections = section;
+
+    const pageNum = parseInt(page as string);
+    const limitNum = parseInt(limit as string);
+    const skip = (pageNum - 1) * limitNum;
+
+    const faculties = await Faculty.find(query).skip(skip).limit(limitNum);
+    const total = await Faculty.countDocuments(query);
+
+    res.json({
+      success: true,
+      data: faculties,
+      pagination: { total, page: pageNum, limit: limitNum, pages: Math.ceil(total / limitNum) }
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// 2. Get single faculty details
+export const getFacultyById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      const faculty = facultiesData.find(f => f._id === req.params.id);
+      if (!faculty) {
+        res.status(404).json({ success: false, message: 'Faculty not found' });
+        return;
+      }
+      res.json({ success: true, data: faculty });
+      return;
+    }
+
+    const faculty = await Faculty.findById(req.params.id);
+    if (!faculty) {
+      res.status(404).json({ success: false, message: 'Faculty not found' });
+      return;
+    }
+    res.json({ success: true, data: faculty });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// 3. Predict Acceptance
 export const predictAcceptance = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Set default maxScore to 320 for current system scale
     const { score, maxScore = 320, section, cities, categories, educationTypes } = req.body;
 
     if (score === undefined || !section) {
@@ -60,7 +141,6 @@ export const predictAcceptance = async (req: Request, res: Response): Promise<vo
       const p2024 = degree2024?.minimumPercent;
       const p2025 = degree2025?.minimumPercent;
 
-      // Weighted Historical Cutoff Calculation
       let weightedCutoff = 0;
       if (p2025 !== undefined && p2024 !== undefined) {
         weightedCutoff = p2025 * 0.6 + p2024 * 0.4;
@@ -109,28 +189,90 @@ export const predictAcceptance = async (req: Request, res: Response): Promise<vo
       if (educationTypes?.length) list = list.filter(f => educationTypes.includes(f.educationType));
 
       const results = list.map(processFacultyPrediction);
-
       results.sort((a, b) => (b.predictions.overall?.percent || 0) - (a.predictions.overall?.percent || 0));
 
       res.json({ success: true, data: results });
       return;
     }
 
-    const query: any = {
-      availableSections: section,
-      'minimumDegrees.section': section
-    };
-
+    const query: any = { availableSections: section, 'minimumDegrees.section': section };
     if (cities?.length) query.city = { $in: cities };
     if (categories?.length) query.category = { $in: categories };
     if (educationTypes?.length) query.educationType = { $in: educationTypes };
 
     const faculties = await Faculty.find(query);
     const results = faculties.map(processFacultyPrediction);
-
     results.sort((a, b) => (b.predictions.overall?.percent || 0) - (a.predictions.overall?.percent || 0));
 
     res.json({ success: true, data: results });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// 4. Recommend Advisory / Colleges
+export const getRecommendations = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { score, maxScore = 320, section, targetCategory } = req.body;
+
+    if (score === undefined || !section) {
+      res.status(400).json({ success: false, message: 'score and section are required parameters' });
+      return;
+    }
+
+    const userPercent = (score / maxScore) * 100;
+
+    const processItem = (fac: any) => {
+      const degree24 = fac.minimumDegrees.find((d: any) => d.year === 2024 && d.section === section);
+      const degree25 = fac.minimumDegrees.find((d: any) => d.year === 2025 && d.section === section);
+      const cutoff = degree25?.minimumPercent ?? degree24?.minimumPercent ?? 0;
+      const prob = calculateProbability(userPercent, cutoff);
+      return { faculty: fac, cutoff, prob };
+    };
+
+    let mapped: any[] = [];
+
+    if (mongoose.connection.readyState !== 1) {
+      let list = facultiesData.filter(fac =>
+        fac.availableSections.includes(section as any) &&
+        fac.minimumDegrees.some(d => d.section === section)
+      );
+      if (targetCategory) list = list.filter(f => f.category === targetCategory);
+      mapped = list.map(processItem);
+    } else {
+      const query: any = { availableSections: section, 'minimumDegrees.section': section };
+      if (targetCategory) query.category = targetCategory;
+      const faculties = await Faculty.find(query);
+      mapped = faculties.map(processItem);
+    }
+
+    const safety = mapped
+      .filter(item => item.prob.percent >= 80)
+      .sort((a, b) => b.cutoff - a.cutoff)
+      .slice(0, 5)
+      .map(item => ({ ...(item.faculty.toJSON ? item.faculty.toJSON() : item.faculty), prediction: item.prob }));
+
+    const match = mapped
+      .filter(item => item.prob.percent >= 50 && item.prob.percent < 80)
+      .sort((a, b) => b.cutoff - a.cutoff)
+      .slice(0, 5)
+      .map(item => ({ ...(item.faculty.toJSON ? item.faculty.toJSON() : item.faculty), prediction: item.prob }));
+
+    const reach = mapped
+      .filter(item => item.prob.percent >= 15 && item.prob.percent < 50)
+      .sort((a, b) => a.cutoff - b.cutoff)
+      .slice(0, 5)
+      .map(item => ({ ...(item.faculty.toJSON ? item.faculty.toJSON() : item.faculty), prediction: item.prob }));
+
+    res.json({
+      success: true,
+      data: {
+        safety,
+        match,
+        reach,
+        userPercent: parseFloat(userPercent.toFixed(2))
+      }
+    });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
