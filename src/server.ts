@@ -12,12 +12,37 @@ import {
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/tanseeq';
+const MONGODB_URI = process.env.MONGODB_URI || '';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Database connection helper for Serverless
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) return;
+  if (!MONGODB_URI) return;
+  try {
+    await mongoose.connect(MONGODB_URI);
+  } catch (err) {
+    console.warn('MongoDB connection failed, falling back to mock data.');
+  }
+};
+
+// Middleware to ensure DB connection per request
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
+// Root & Health Check
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'Tanseeq API is running 🚀' });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', time: new Date() });
+});
 
 // Routes
 app.get('/api/faculties', getFaculties);
@@ -25,29 +50,17 @@ app.get('/api/faculties/:id', getFacultyById);
 app.post('/api/predict', predictAcceptance);
 app.post('/api/recommend', getRecommendations);
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date() });
-});
-
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Endpoint not found' });
 });
 
-// Connect to Database & Start Server
-const startServer = async () => {
-  try {
-    console.log('Connecting to MongoDB...');
-    await mongoose.connect(MONGODB_URI);
-    console.log('Successfully connected to MongoDB');
-  } catch (error) {
-    console.warn('MongoDB connection failed. Running with local mock data fallback.');
-  }
-
+// Local development support
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`Server running locally on port ${PORT}`);
   });
-};
+}
 
-startServer();
+export default app;
