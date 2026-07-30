@@ -1,4 +1,4 @@
-export const facultiesData = [
+﻿export const facultiesData = [
   {
     _id: "660c1d2e9c1c4e2b8f8b4561",
     faculty: "كلية الطب البشري",
@@ -20,12 +20,21 @@ export const facultiesData = [
         year: 2024,
         section: "science_nature",
         maxScore: 410,
-        minimumDegree: 379.0,
-        minimumPercent: 92.44
+        minimumDegree: 387.0,
+        minimumPercent: 94.39
       },
       {
         year: 2025,
         section: "science_nature",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 377.3,
+        minimumPercent: 92.02
+      },
+      {
+        year: 2025,
+        section: "science_nature",
+        system: "new",
         maxScore: 320,
         minimumDegree: 303.5,
         minimumPercent: 94.84
@@ -53,15 +62,24 @@ export const facultiesData = [
         year: 2024,
         section: "science_math",
         maxScore: 410,
-        minimumDegree: 363.0,
-        minimumPercent: 88.54
+        minimumDegree: 373.5,
+        minimumPercent: 91.10
       },
       {
         year: 2025,
         section: "science_math",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 351.6,
+        minimumPercent: 85.76
+      },
+      {
+        year: 2025,
+        section: "science_math",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 280.0,
-        minimumPercent: 87.50
+        minimumDegree: 295.0,
+        minimumPercent: 92.19
       }
     ]
   },
@@ -86,15 +104,24 @@ export const facultiesData = [
         year: 2024,
         section: "science_math",
         maxScore: 410,
-        minimumDegree: 357.5,
-        minimumPercent: 87.20
+        minimumDegree: 358.5,
+        minimumPercent: 87.44
       },
       {
         year: 2025,
         section: "science_math",
+        system: "old",
         maxScore: 320,
-        minimumDegree: 275.5,
-        minimumPercent: 86.09
+        minimumDegree: 332.8,
+        minimumPercent: 104.0
+      },
+      {
+        year: 2025,
+        section: "science_math",
+        system: "new",
+        maxScore: 320,
+        minimumDegree: 282.5,
+        minimumPercent: 88.28
       },
       {
         year: 2024,
@@ -106,9 +133,18 @@ export const facultiesData = [
       {
         year: 2025,
         section: "science_nature",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 358.8,
+        minimumPercent: 87.51
+      },
+      {
+        year: 2025,
+        section: "science_nature",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 291.0,
-        minimumPercent: 90.94
+        minimumDegree: 288.0,
+        minimumPercent: 90.00
       }
     ]
   },
@@ -133,29 +169,40 @@ export const facultiesData = [
         year: 2024,
         section: "literary",
         maxScore: 410,
-        minimumDegree: 295.5,
-        minimumPercent: 72.07
+        minimumDegree: 308.5,
+        minimumPercent: 75.24
       },
       {
         year: 2025,
         section: "literary",
-        maxScore: 320,
-        minimumDegree: 228.0,
-        minimumPercent: 71.25
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 278.5,
+        minimumPercent: 67.93
       },
       {
-        year: 2024,
-        section: "science_math",
-        maxScore: 410,
-        minimumDegree: 285.0,
-        minimumPercent: 69.51
+        year: 2025,
+        section: "literary",
+        system: "new",
+        maxScore: 320,
+        minimumDegree: 249.0,
+        minimumPercent: 77.81
       },
       {
         year: 2025,
         section: "science_math",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 291.8,
+        minimumPercent: 71.17
+      },
+      {
+        year: 2025,
+        section: "science_math",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 215.0,
-        minimumPercent: 67.19
+        minimumDegree: 234.5,
+        minimumPercent: 73.28
       }
     ]
   },
@@ -180,15 +227,24 @@ export const facultiesData = [
         year: 2024,
         section: "literary",
         maxScore: 410,
-        minimumDegree: 280.0,
-        minimumPercent: 68.29
+        minimumDegree: 292.0,
+        minimumPercent: 71.22
       },
       {
         year: 2025,
         section: "literary",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 258.1,
+        minimumPercent: 62.95
+      },
+      {
+        year: 2025,
+        section: "literary",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 210.0,
-        minimumPercent: 65.63
+        minimumDegree: 258.0,
+        minimumPercent: 80.63
       }
     ]
   },
@@ -213,15 +269,24 @@ export const facultiesData = [
         year: 2024,
         section: "science_nature",
         maxScore: 410,
-        minimumDegree: 335.0,
-        minimumPercent: 81.71
+        minimumDegree: 342.0,
+        minimumPercent: 83.41
       },
       {
         year: 2025,
         section: "science_nature",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 331.6,
+        minimumPercent: 80.88
+      },
+      {
+        year: 2025,
+        section: "science_nature",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 250.0,
-        minimumPercent: 78.13
+        minimumDegree: 263.0,
+        minimumPercent: 82.19
       }
     ]
   },
@@ -246,29 +311,40 @@ export const facultiesData = [
         year: 2024,
         section: "literary",
         maxScore: 410,
-        minimumDegree: 228.0,
-        minimumPercent: 55.61
+        minimumDegree: 273.0,
+        minimumPercent: 66.59
       },
       {
         year: 2025,
         section: "literary",
-        maxScore: 320,
-        minimumDegree: 180.0,
-        minimumPercent: 56.25
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 253.1,
+        minimumPercent: 61.73
       },
       {
-        year: 2024,
-        section: "science_nature",
-        maxScore: 410,
+        year: 2025,
+        section: "literary",
+        system: "new",
+        maxScore: 320,
         minimumDegree: 215.0,
-        minimumPercent: 52.44
+        minimumPercent: 67.19
       },
       {
         year: 2025,
         section: "science_nature",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 260.0,
+        minimumPercent: 63.41
+      },
+      {
+        year: 2025,
+        section: "science_nature",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 165.0,
-        minimumPercent: 51.56
+        minimumDegree: 205.5,
+        minimumPercent: 64.22
       }
     ]
   },
@@ -293,29 +369,24 @@ export const facultiesData = [
         year: 2024,
         section: "literary",
         maxScore: 410,
-        minimumDegree: 218.0,
-        minimumPercent: 53.17
+        minimumDegree: 246.0,
+        minimumPercent: 60.00
       },
       {
         year: 2025,
         section: "literary",
-        maxScore: 320,
-        minimumDegree: 168.0,
-        minimumPercent: 52.50
-      },
-      {
-        year: 2024,
-        section: "science_nature",
+        system: "old",
         maxScore: 410,
-        minimumDegree: 208.0,
-        minimumPercent: 50.73
+        minimumDegree: 244.1,
+        minimumPercent: 59.54
       },
       {
         year: 2025,
-        section: "science_nature",
+        section: "literary",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 161.0,
-        minimumPercent: 50.31
+        minimumDegree: 192.0,
+        minimumPercent: 60.00
       }
     ]
   },
@@ -340,29 +411,24 @@ export const facultiesData = [
         year: 2024,
         section: "literary",
         maxScore: 410,
-        minimumDegree: 212.0,
-        minimumPercent: 51.71
+        minimumDegree: 247.5,
+        minimumPercent: 60.37
       },
       {
         year: 2025,
         section: "literary",
-        maxScore: 320,
-        minimumDegree: 163.0,
-        minimumPercent: 50.94
-      },
-      {
-        year: 2024,
-        section: "science_math",
+        system: "old",
         maxScore: 410,
-        minimumDegree: 205.5,
-        minimumPercent: 50.12
+        minimumDegree: 234.6,
+        minimumPercent: 57.22
       },
       {
         year: 2025,
-        section: "science_math",
+        section: "literary",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 160.0,
-        minimumPercent: 50.00
+        minimumDegree: 179.0,
+        minimumPercent: 55.94
       }
     ]
   },
@@ -387,29 +453,47 @@ export const facultiesData = [
         year: 2024,
         section: "literary",
         maxScore: 410,
-        minimumDegree: 207.0,
-        minimumPercent: 50.49
-      },
-      {
-        year: 2025,
-        section: "literary",
-        maxScore: 320,
-        minimumDegree: 161.0,
-        minimumPercent: 50.31
+        minimumDegree: 234.0,
+        minimumPercent: 57.07
       },
       {
         year: 2024,
         section: "science_nature",
         maxScore: 410,
-        minimumDegree: 205.0,
-        minimumPercent: 50.00
+        minimumDegree: 231.0,
+        minimumPercent: 56.34
+      },
+      {
+        year: 2025,
+        section: "literary",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 216.0,
+        minimumPercent: 52.68
+      },
+      {
+        year: 2025,
+        section: "literary",
+        system: "new",
+        maxScore: 320,
+        minimumDegree: 185.5,
+        minimumPercent: 57.97
       },
       {
         year: 2025,
         section: "science_nature",
+        system: "old",
+        maxScore: 410,
+        minimumDegree: 214.0,
+        minimumPercent: 52.20
+      },
+      {
+        year: 2025,
+        section: "science_nature",
+        system: "new",
         maxScore: 320,
-        minimumDegree: 160.0,
-        minimumPercent: 50.00
+        minimumDegree: 193.5,
+        minimumPercent: 60.47
       }
     ]
   },
@@ -431,8 +515,9 @@ export const facultiesData = [
     ],
     minimumDegrees: [
       {
-        year: 2024,
+        year: 2025,
         section: "literary",
+        system: "old",
         maxScore: 410,
         minimumDegree: 205.0,
         minimumPercent: 50.00
@@ -440,20 +525,23 @@ export const facultiesData = [
       {
         year: 2025,
         section: "literary",
+        system: "new",
         maxScore: 320,
         minimumDegree: 160.0,
         minimumPercent: 50.00
       },
       {
-        year: 2024,
+        year: 2025,
         section: "science_math",
-        maxScore: 410,
+        system: "old",
+        maxScore: 320,
         minimumDegree: 205.0,
-        minimumPercent: 50.00
+        minimumPercent: 64.06
       },
       {
         year: 2025,
         section: "science_math",
+        system: "new",
         maxScore: 320,
         minimumDegree: 160.0,
         minimumPercent: 50.00
@@ -478,8 +566,9 @@ export const facultiesData = [
     ],
     minimumDegrees: [
       {
-        year: 2024,
+        year: 2025,
         section: "literary",
+        system: "old",
         maxScore: 410,
         minimumDegree: 205.0,
         minimumPercent: 50.00
@@ -487,6 +576,7 @@ export const facultiesData = [
       {
         year: 2025,
         section: "literary",
+        system: "new",
         maxScore: 320,
         minimumDegree: 160.0,
         minimumPercent: 50.00
